@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package common.v1;
+
+option go_package = "github.com/JrMarcco/synp-api/api/common/v1";
+
+enum CommandType {
+  COMMAND_TYPE_UNSPECIFIED = 0;
+
+  COMMAND_TYPE_HEARTBEAT = 1; // 心跳
+
+  COMMAND_TYPE_UPSTREAM_MESSAGE = 2; // 上行消息: client -> gateway
+  COMMAND_TYPE_UPSTREAM_ACK = 3; // 上行消息 ACK 响应
+
+  COMMAND_TYPE_DOWNSTREAM_MESSAGE = 4; // 下行消息: gateway -> client
+  COMMAND_TYPE_DOWNSTREAM_ACK = 5; // 下行消息 ACK 响应
+
+  COMMAND_TYPE_REDIRECT = 6; // 重定向指令
+  COMMAND_TYPE_RATE_LIMIT_EXCEEDED = 7;
+}

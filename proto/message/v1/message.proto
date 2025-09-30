@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package message.v1;
+
+import "common/v1/types.proto";
+
+message Message {
+  string message_id = 1;
+  common.v1.CommandType cmd = 2;
+  bytes body = 3;
+}
