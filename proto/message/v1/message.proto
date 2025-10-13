@@ -5,7 +5,34 @@ package message.v1;
 import "common/v1/types.proto";
 
 message Message {
-  string message_id = 1;
+  // 业务 key，由客户端生成。
+  // biz_key 有 2 个作用:
+  //  1.消息去重；
+  //  2.对 biz_key 进行 hash，选择消息队列分区从而保证消息有序性。
+  string biz_key = 1;
+
+  // 消息类型。
+  // 这里不使用 MessageType type 作为字段名是因为 type 在 go 里面是关键字。
   common.v1.CommandType cmd = 2;
-  bytes body = 3;
+
+  // body 的序列化类型。
+  common.v1.SerializeType serialize_type = 3;
+
+  // 消息体。
+  bytes body = 4;
+}
+
+// PushMessage 是由业务后端（backend）主动向网关发送的消息。
+// 通信方式为业务后端推送 PushMessage 到 Kafka 的指定 topic，由网关监听并消费。
+message PushMessage {
+  // 同 Message 的 biz_key，由 backend 生成。
+  string biz_key = 1;
+  uint64 biz_id = 2;
+  uint64 receiver_id = 3;
+
+  // body 的序列化类型。
+  common.v1.SerializeType serialize_type = 4;
+
+  // 消息体。
+  bytes body = 5;
 }
