@@ -5,8 +5,7 @@ package message.v1;
 import "common/v1/types.proto";
 
 message Message {
-  // 业务 key，由客户端生成。
-  // biz_key 有 2 个作用:
+  // 由前端 ( 业务客户端 ) 生成，有 2 个作用:
   //  1.消息去重；
   //  2.对 biz_key 进行 hash，选择消息队列分区从而保证消息有序性。
   string biz_key = 1;
@@ -25,7 +24,7 @@ message Message {
 // PushMessage 是由业务后端（backend）主动向网关发送的消息。
 // 通信方式为业务后端推送 PushMessage 到 Kafka 的指定 topic，由网关监听并消费。
 message PushMessage {
-  // 同 Message 的 biz_key，由 backend 生成。
+  // 同 Message 的 biz_key ( 业务服务端 ) 生成。
   string biz_key = 1;
   uint64 biz_id = 2;
   uint64 receiver_id = 3;
