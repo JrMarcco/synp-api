@@ -4,11 +4,12 @@ package message.v1;
 
 import "common/v1/types.proto";
 
+// Message 是前端 (业务客户端) 和网关之间的通信消息。
 message Message {
   // 由前端 ( 业务客户端 ) 生成，有 2 个作用:
   //  1.消息去重；
-  //  2.对 biz_key 进行 hash，选择消息队列分区从而保证消息有序性。
-  string biz_key = 1;
+  //  2.对 message_id 进行 hash，选择消息队列分区从而保证消息有序性。
+  string message_id = 1;
 
   // 消息类型。
   // 这里不使用 MessageType type 作为字段名是因为 type 在 go 里面是关键字。
@@ -21,11 +22,13 @@ message Message {
   bytes body = 4;
 }
 
-// PushMessage 是由业务后端（backend）主动向网关发送的消息。
+// PushMessage 是由后端 ( 业务服务端 ) 主动向网关发送的消息。
 // 通信方式为业务后端推送 PushMessage 到 Kafka 的指定 topic，由网关监听并消费。
+// 网关收到 PushMessage 后，
+// 会向前端发送 CommandType 为 COMMAND_TYPE_DOWNSTREAM 的 Message。
 message PushMessage {
-  // 同 Message 的 biz_key ( 业务服务端 ) 生成。
-  string biz_key = 1;
+  // 同 Message 的 message_id ( 业务服务端 ) 生成。
+  string message_id = 1;
   uint64 biz_id = 2;
   uint64 receiver_id = 3;
 
@@ -34,4 +37,19 @@ message PushMessage {
 
   // 消息体。
   bytes body = 5;
+}
+
+// AckMessage 是消息确认响应，用于告知发送方消息的处理结果。
+// 适用于上行消息和下行消息的 ACK 响应。
+message AckMessage {
+  // 原始消息的 message_id，用于关联请求。
+  string message_id = 1;
+
+  bool success = 2;
+
+  common.v1.ErrCode err_code = 3;
+  string err_msg = 4;
+
+  // 服务端处理时间戳（毫秒）。
+  int64 timestamp = 5;
 }

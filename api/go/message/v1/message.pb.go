@@ -22,14 +22,14 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// Message 是前端 (业务客户端) 和网关之间的通信消息。
 type Message struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 业务 key，由客户端生成。
-	// biz_key 有 2 个作用:
+	// 由前端 ( 业务客户端 ) 生成，有 2 个作用:
 	//
 	//	1.消息去重；
-	//	2.对 biz_key 进行 hash，选择消息队列分区从而保证消息有序性。
-	BizKey string `protobuf:"bytes,1,opt,name=biz_key,json=bizKey,proto3" json:"biz_key,omitempty"`
+	//	2.对 message_id 进行 hash，选择消息队列分区从而保证消息有序性。
+	MessageId string `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
 	// 消息类型。
 	// 这里不使用 MessageType type 作为字段名是因为 type 在 go 里面是关键字。
 	Cmd v1.CommandType `protobuf:"varint,2,opt,name=cmd,proto3,enum=common.v1.CommandType" json:"cmd,omitempty"`
@@ -71,9 +71,9 @@ func (*Message) Descriptor() ([]byte, []int) {
 	return file_message_v1_message_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Message) GetBizKey() string {
+func (x *Message) GetMessageId() string {
 	if x != nil {
-		return x.BizKey
+		return x.MessageId
 	}
 	return ""
 }
@@ -99,12 +99,14 @@ func (x *Message) GetBody() []byte {
 	return nil
 }
 
-// PushMessage 是由业务后端（backend）主动向网关发送的消息。
+// PushMessage 是由后端 ( 业务服务端 ) 主动向网关发送的消息。
 // 通信方式为业务后端推送 PushMessage 到 Kafka 的指定 topic，由网关监听并消费。
+// 网关收到 PushMessage 后，
+// 会向前端发送 CommandType 为 COMMAND_TYPE_DOWNSTREAM 的 Message。
 type PushMessage struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 同 Message 的 biz_key，由 backend 生成。
-	BizKey     string `protobuf:"bytes,1,opt,name=biz_key,json=bizKey,proto3" json:"biz_key,omitempty"`
+	// 同 Message 的 message_id ( 业务服务端 ) 生成。
+	MessageId  string `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
 	BizId      uint64 `protobuf:"varint,2,opt,name=biz_id,json=bizId,proto3" json:"biz_id,omitempty"`
 	ReceiverId uint64 `protobuf:"varint,3,opt,name=receiver_id,json=receiverId,proto3" json:"receiver_id,omitempty"`
 	// body 的序列化类型。
@@ -145,9 +147,9 @@ func (*PushMessage) Descriptor() ([]byte, []int) {
 	return file_message_v1_message_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *PushMessage) GetBizKey() string {
+func (x *PushMessage) GetMessageId() string {
 	if x != nil {
-		return x.BizKey
+		return x.MessageId
 	}
 	return ""
 }
@@ -180,24 +182,114 @@ func (x *PushMessage) GetBody() []byte {
 	return nil
 }
 
+// AckMessage 是消息确认响应，用于告知发送方消息的处理结果。
+// 适用于上行消息和下行消息的 ACK 响应。
+type AckMessage struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// 原始消息的 message_id，用于关联请求。
+	MessageId string     `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	Success   bool       `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
+	ErrCode   v1.ErrCode `protobuf:"varint,3,opt,name=err_code,json=errCode,proto3,enum=common.v1.ErrCode" json:"err_code,omitempty"`
+	ErrMsg    string     `protobuf:"bytes,4,opt,name=err_msg,json=errMsg,proto3" json:"err_msg,omitempty"`
+	// 服务端处理时间戳（毫秒）。
+	Timestamp     int64 `protobuf:"varint,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AckMessage) Reset() {
+	*x = AckMessage{}
+	mi := &file_message_v1_message_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AckMessage) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AckMessage) ProtoMessage() {}
+
+func (x *AckMessage) ProtoReflect() protoreflect.Message {
+	mi := &file_message_v1_message_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AckMessage.ProtoReflect.Descriptor instead.
+func (*AckMessage) Descriptor() ([]byte, []int) {
+	return file_message_v1_message_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *AckMessage) GetMessageId() string {
+	if x != nil {
+		return x.MessageId
+	}
+	return ""
+}
+
+func (x *AckMessage) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *AckMessage) GetErrCode() v1.ErrCode {
+	if x != nil {
+		return x.ErrCode
+	}
+	return v1.ErrCode(0)
+}
+
+func (x *AckMessage) GetErrMsg() string {
+	if x != nil {
+		return x.ErrMsg
+	}
+	return ""
+}
+
+func (x *AckMessage) GetTimestamp() int64 {
+	if x != nil {
+		return x.Timestamp
+	}
+	return 0
+}
+
 var File_message_v1_message_proto protoreflect.FileDescriptor
 
 const file_message_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"\x18message/v1/message.proto\x12\n" +
-	"message.v1\x1a\x15common/v1/types.proto\"\xa1\x01\n" +
-	"\aMessage\x12\x17\n" +
-	"\abiz_key\x18\x01 \x01(\tR\x06bizKey\x12(\n" +
+	"message.v1\x1a\x15common/v1/types.proto\"\xa7\x01\n" +
+	"\aMessage\x12\x1d\n" +
+	"\n" +
+	"message_id\x18\x01 \x01(\tR\tmessageId\x12(\n" +
 	"\x03cmd\x18\x02 \x01(\x0e2\x16.common.v1.CommandTypeR\x03cmd\x12?\n" +
 	"\x0eserialize_type\x18\x03 \x01(\x0e2\x18.common.v1.SerializeTypeR\rserializeType\x12\x12\n" +
-	"\x04body\x18\x04 \x01(\fR\x04body\"\xb3\x01\n" +
-	"\vPushMessage\x12\x17\n" +
-	"\abiz_key\x18\x01 \x01(\tR\x06bizKey\x12\x15\n" +
+	"\x04body\x18\x04 \x01(\fR\x04body\"\xb9\x01\n" +
+	"\vPushMessage\x12\x1d\n" +
+	"\n" +
+	"message_id\x18\x01 \x01(\tR\tmessageId\x12\x15\n" +
 	"\x06biz_id\x18\x02 \x01(\x04R\x05bizId\x12\x1f\n" +
 	"\vreceiver_id\x18\x03 \x01(\x04R\n" +
 	"receiverId\x12?\n" +
 	"\x0eserialize_type\x18\x04 \x01(\x0e2\x18.common.v1.SerializeTypeR\rserializeType\x12\x12\n" +
-	"\x04body\x18\x05 \x01(\fR\x04bodyB\xa1\x01\n" +
+	"\x04body\x18\x05 \x01(\fR\x04body\"\xab\x01\n" +
+	"\n" +
+	"AckMessage\x12\x1d\n" +
+	"\n" +
+	"message_id\x18\x01 \x01(\tR\tmessageId\x12\x18\n" +
+	"\asuccess\x18\x02 \x01(\bR\asuccess\x12-\n" +
+	"\berr_code\x18\x03 \x01(\x0e2\x12.common.v1.ErrCodeR\aerrCode\x12\x17\n" +
+	"\aerr_msg\x18\x04 \x01(\tR\x06errMsg\x12\x1c\n" +
+	"\ttimestamp\x18\x05 \x01(\x03R\ttimestampB\xa1\x01\n" +
 	"\x0ecom.message.v1B\fMessageProtoP\x01Z8github.com/JrMarcco/synp-api/api/go/message/v1;messagev1\xa2\x02\x03MXX\xaa\x02\n" +
 	"Message.V1\xca\x02\n" +
 	"Message\\V1\xe2\x02\x16Message\\V1\\GPBMetadata\xea\x02\vMessage::V1b\x06proto3"
@@ -214,22 +306,25 @@ func file_message_v1_message_proto_rawDescGZIP() []byte {
 	return file_message_v1_message_proto_rawDescData
 }
 
-var file_message_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_message_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_message_v1_message_proto_goTypes = []any{
 	(*Message)(nil),       // 0: message.v1.Message
 	(*PushMessage)(nil),   // 1: message.v1.PushMessage
-	(v1.CommandType)(0),   // 2: common.v1.CommandType
-	(v1.SerializeType)(0), // 3: common.v1.SerializeType
+	(*AckMessage)(nil),    // 2: message.v1.AckMessage
+	(v1.CommandType)(0),   // 3: common.v1.CommandType
+	(v1.SerializeType)(0), // 4: common.v1.SerializeType
+	(v1.ErrCode)(0),       // 5: common.v1.ErrCode
 }
 var file_message_v1_message_proto_depIdxs = []int32{
-	2, // 0: message.v1.Message.cmd:type_name -> common.v1.CommandType
-	3, // 1: message.v1.Message.serialize_type:type_name -> common.v1.SerializeType
-	3, // 2: message.v1.PushMessage.serialize_type:type_name -> common.v1.SerializeType
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	3, // 0: message.v1.Message.cmd:type_name -> common.v1.CommandType
+	4, // 1: message.v1.Message.serialize_type:type_name -> common.v1.SerializeType
+	4, // 2: message.v1.PushMessage.serialize_type:type_name -> common.v1.SerializeType
+	5, // 3: message.v1.AckMessage.err_code:type_name -> common.v1.ErrCode
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_message_v1_message_proto_init() }
@@ -243,7 +338,7 @@ func file_message_v1_message_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_message_v1_message_proto_rawDesc), len(file_message_v1_message_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

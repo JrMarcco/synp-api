@@ -60,7 +60,7 @@ func (m *Message) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for BizKey
+	// no validation rules for MessageId
 
 	// no validation rules for Cmd
 
@@ -167,7 +167,7 @@ func (m *PushMessage) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for BizKey
+	// no validation rules for MessageId
 
 	// no validation rules for BizId
 
@@ -253,3 +253,112 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = PushMessageValidationError{}
+
+// Validate checks the field values on AckMessage with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *AckMessage) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on AckMessage with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in AckMessageMultiError, or
+// nil if none found.
+func (m *AckMessage) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *AckMessage) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for MessageId
+
+	// no validation rules for Success
+
+	// no validation rules for ErrCode
+
+	// no validation rules for ErrMsg
+
+	// no validation rules for Timestamp
+
+	if len(errors) > 0 {
+		return AckMessageMultiError(errors)
+	}
+
+	return nil
+}
+
+// AckMessageMultiError is an error wrapping multiple validation errors
+// returned by AckMessage.ValidateAll() if the designated constraints aren't met.
+type AckMessageMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AckMessageMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AckMessageMultiError) AllErrors() []error { return m }
+
+// AckMessageValidationError is the validation error returned by
+// AckMessage.Validate if the designated constraints aren't met.
+type AckMessageValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AckMessageValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AckMessageValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AckMessageValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AckMessageValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AckMessageValidationError) ErrorName() string { return "AckMessageValidationError" }
+
+// Error satisfies the builtin error interface
+func (e AckMessageValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAckMessage.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AckMessageValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AckMessageValidationError{}

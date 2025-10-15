@@ -12,20 +12,15 @@ enum CommandType {
   COMMAND_TYPE_HEARTBEAT = 1;
 
   // 上行消息: frontend -> gateway -> backend。
-  COMMAND_TYPE_UPSTREAM_MESSAGE = 2;
-  // 上行消息 ACK 响应。
-  COMMAND_TYPE_UPSTREAM_ACK = 3;
-
+  COMMAND_TYPE_UPSTREAM = 2;
   // 下行消息: backend -> gateway -> backend。
-  COMMAND_TYPE_DOWNSTREAM_MESSAGE = 4;
-  // 下行消息 ACK 响应。
-  COMMAND_TYPE_DOWNSTREAM_ACK = 5;
+  COMMAND_TYPE_DOWNSTREAM = 3;
 
   // 重定向指令。
-  COMMAND_TYPE_REDIRECT = 6;
+  COMMAND_TYPE_REDIRECT = 4;
 
   // 限流指令：gateway -> frontend。
-  COMMAND_TYPE_RATE_LIMIT_EXCEEDED = 7;
+  COMMAND_TYPE_RATE_LIMIT_EXCEEDED = 5;
 }
 
 // 消息体的序列化类型。
@@ -34,4 +29,8 @@ enum SerializeType {
   SERIALIZE_TYPE_UNSPECIFIED = 0;
   SERIALIZE_TYPE_PROTOBUF = 1;
   SERIALIZE_TYPE_JSON = 2;
+}
+
+enum ErrCode {
+  ERR_UNSPECIFIED = 0;
 }

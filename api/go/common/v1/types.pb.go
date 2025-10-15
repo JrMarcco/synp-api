@@ -29,17 +29,13 @@ const (
 	// 心跳指令。
 	CommandType_COMMAND_TYPE_HEARTBEAT CommandType = 1
 	// 上行消息: frontend -> gateway -> backend。
-	CommandType_COMMAND_TYPE_UPSTREAM_MESSAGE CommandType = 2
-	// 上行消息 ACK 响应。
-	CommandType_COMMAND_TYPE_UPSTREAM_ACK CommandType = 3
+	CommandType_COMMAND_TYPE_UPSTREAM CommandType = 2
 	// 下行消息: backend -> gateway -> backend。
-	CommandType_COMMAND_TYPE_DOWNSTREAM_MESSAGE CommandType = 4
-	// 下行消息 ACK 响应。
-	CommandType_COMMAND_TYPE_DOWNSTREAM_ACK CommandType = 5
+	CommandType_COMMAND_TYPE_DOWNSTREAM CommandType = 3
 	// 重定向指令。
-	CommandType_COMMAND_TYPE_REDIRECT CommandType = 6
+	CommandType_COMMAND_TYPE_REDIRECT CommandType = 4
 	// 限流指令：gateway -> frontend。
-	CommandType_COMMAND_TYPE_RATE_LIMIT_EXCEEDED CommandType = 7
+	CommandType_COMMAND_TYPE_RATE_LIMIT_EXCEEDED CommandType = 5
 )
 
 // Enum value maps for CommandType.
@@ -47,22 +43,18 @@ var (
 	CommandType_name = map[int32]string{
 		0: "COMMAND_TYPE_UNSPECIFIED",
 		1: "COMMAND_TYPE_HEARTBEAT",
-		2: "COMMAND_TYPE_UPSTREAM_MESSAGE",
-		3: "COMMAND_TYPE_UPSTREAM_ACK",
-		4: "COMMAND_TYPE_DOWNSTREAM_MESSAGE",
-		5: "COMMAND_TYPE_DOWNSTREAM_ACK",
-		6: "COMMAND_TYPE_REDIRECT",
-		7: "COMMAND_TYPE_RATE_LIMIT_EXCEEDED",
+		2: "COMMAND_TYPE_UPSTREAM",
+		3: "COMMAND_TYPE_DOWNSTREAM",
+		4: "COMMAND_TYPE_REDIRECT",
+		5: "COMMAND_TYPE_RATE_LIMIT_EXCEEDED",
 	}
 	CommandType_value = map[string]int32{
 		"COMMAND_TYPE_UNSPECIFIED":         0,
 		"COMMAND_TYPE_HEARTBEAT":           1,
-		"COMMAND_TYPE_UPSTREAM_MESSAGE":    2,
-		"COMMAND_TYPE_UPSTREAM_ACK":        3,
-		"COMMAND_TYPE_DOWNSTREAM_MESSAGE":  4,
-		"COMMAND_TYPE_DOWNSTREAM_ACK":      5,
-		"COMMAND_TYPE_REDIRECT":            6,
-		"COMMAND_TYPE_RATE_LIMIT_EXCEEDED": 7,
+		"COMMAND_TYPE_UPSTREAM":            2,
+		"COMMAND_TYPE_DOWNSTREAM":          3,
+		"COMMAND_TYPE_REDIRECT":            4,
+		"COMMAND_TYPE_RATE_LIMIT_EXCEEDED": 5,
 	}
 )
 
@@ -144,24 +136,67 @@ func (SerializeType) EnumDescriptor() ([]byte, []int) {
 	return file_common_v1_types_proto_rawDescGZIP(), []int{1}
 }
 
+type ErrCode int32
+
+const (
+	ErrCode_ERR_UNSPECIFIED ErrCode = 0
+)
+
+// Enum value maps for ErrCode.
+var (
+	ErrCode_name = map[int32]string{
+		0: "ERR_UNSPECIFIED",
+	}
+	ErrCode_value = map[string]int32{
+		"ERR_UNSPECIFIED": 0,
+	}
+)
+
+func (x ErrCode) Enum() *ErrCode {
+	p := new(ErrCode)
+	*p = x
+	return p
+}
+
+func (x ErrCode) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ErrCode) Descriptor() protoreflect.EnumDescriptor {
+	return file_common_v1_types_proto_enumTypes[2].Descriptor()
+}
+
+func (ErrCode) Type() protoreflect.EnumType {
+	return &file_common_v1_types_proto_enumTypes[2]
+}
+
+func (x ErrCode) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ErrCode.Descriptor instead.
+func (ErrCode) EnumDescriptor() ([]byte, []int) {
+	return file_common_v1_types_proto_rawDescGZIP(), []int{2}
+}
+
 var File_common_v1_types_proto protoreflect.FileDescriptor
 
 const file_common_v1_types_proto_rawDesc = "" +
 	"\n" +
-	"\x15common/v1/types.proto\x12\tcommon.v1*\x90\x02\n" +
+	"\x15common/v1/types.proto\x12\tcommon.v1*\xc0\x01\n" +
 	"\vCommandType\x12\x1c\n" +
 	"\x18COMMAND_TYPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
-	"\x16COMMAND_TYPE_HEARTBEAT\x10\x01\x12!\n" +
-	"\x1dCOMMAND_TYPE_UPSTREAM_MESSAGE\x10\x02\x12\x1d\n" +
-	"\x19COMMAND_TYPE_UPSTREAM_ACK\x10\x03\x12#\n" +
-	"\x1fCOMMAND_TYPE_DOWNSTREAM_MESSAGE\x10\x04\x12\x1f\n" +
-	"\x1bCOMMAND_TYPE_DOWNSTREAM_ACK\x10\x05\x12\x19\n" +
-	"\x15COMMAND_TYPE_REDIRECT\x10\x06\x12$\n" +
-	" COMMAND_TYPE_RATE_LIMIT_EXCEEDED\x10\a*e\n" +
+	"\x16COMMAND_TYPE_HEARTBEAT\x10\x01\x12\x19\n" +
+	"\x15COMMAND_TYPE_UPSTREAM\x10\x02\x12\x1b\n" +
+	"\x17COMMAND_TYPE_DOWNSTREAM\x10\x03\x12\x19\n" +
+	"\x15COMMAND_TYPE_REDIRECT\x10\x04\x12$\n" +
+	" COMMAND_TYPE_RATE_LIMIT_EXCEEDED\x10\x05*e\n" +
 	"\rSerializeType\x12\x1e\n" +
 	"\x1aSERIALIZE_TYPE_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17SERIALIZE_TYPE_PROTOBUF\x10\x01\x12\x17\n" +
-	"\x13SERIALIZE_TYPE_JSON\x10\x02B\x98\x01\n" +
+	"\x13SERIALIZE_TYPE_JSON\x10\x02*\x1e\n" +
+	"\aErrCode\x12\x13\n" +
+	"\x0fERR_UNSPECIFIED\x10\x00B\x98\x01\n" +
 	"\rcom.common.v1B\n" +
 	"TypesProtoP\x01Z6github.com/JrMarcco/synp-api/api/go/common/v1;commonv1\xa2\x02\x03CXX\xaa\x02\tCommon.V1\xca\x02\tCommon\\V1\xe2\x02\x15Common\\V1\\GPBMetadata\xea\x02\n" +
 	"Common::V1b\x06proto3"
@@ -178,10 +213,11 @@ func file_common_v1_types_proto_rawDescGZIP() []byte {
 	return file_common_v1_types_proto_rawDescData
 }
 
-var file_common_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_common_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
 var file_common_v1_types_proto_goTypes = []any{
 	(CommandType)(0),   // 0: common.v1.CommandType
 	(SerializeType)(0), // 1: common.v1.SerializeType
+	(ErrCode)(0),       // 2: common.v1.ErrCode
 }
 var file_common_v1_types_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -201,7 +237,7 @@ func file_common_v1_types_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_types_proto_rawDesc), len(file_common_v1_types_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      3,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,
