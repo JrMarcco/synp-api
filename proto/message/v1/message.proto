@@ -46,10 +46,8 @@ message AckMessage {
   string message_id = 1;
 
   bool success = 2;
-
-  common.v1.ErrCode err_code = 3;
-  string err_msg = 4;
+  string err_msg = 3;
 
   // 服务端处理时间戳（毫秒）。
-  int64 timestamp = 5;
+  int64 timestamp = 4;
 }

@@ -280,8 +280,6 @@ func (m *AckMessage) validate(all bool) error {
 
 	// no validation rules for Success
 
-	// no validation rules for ErrCode
-
 	// no validation rules for ErrMsg
 
 	// no validation rules for Timestamp

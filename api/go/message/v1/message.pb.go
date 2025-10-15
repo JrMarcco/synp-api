@@ -187,12 +187,11 @@ func (x *PushMessage) GetBody() []byte {
 type AckMessage struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 原始消息的 message_id，用于关联请求。
-	MessageId string     `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
-	Success   bool       `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
-	ErrCode   v1.ErrCode `protobuf:"varint,3,opt,name=err_code,json=errCode,proto3,enum=common.v1.ErrCode" json:"err_code,omitempty"`
-	ErrMsg    string     `protobuf:"bytes,4,opt,name=err_msg,json=errMsg,proto3" json:"err_msg,omitempty"`
+	MessageId string `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
+	Success   bool   `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
+	ErrMsg    string `protobuf:"bytes,3,opt,name=err_msg,json=errMsg,proto3" json:"err_msg,omitempty"`
 	// 服务端处理时间戳（毫秒）。
-	Timestamp     int64 `protobuf:"varint,5,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Timestamp     int64 `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -241,13 +240,6 @@ func (x *AckMessage) GetSuccess() bool {
 	return false
 }
 
-func (x *AckMessage) GetErrCode() v1.ErrCode {
-	if x != nil {
-		return x.ErrCode
-	}
-	return v1.ErrCode(0)
-}
-
 func (x *AckMessage) GetErrMsg() string {
 	if x != nil {
 		return x.ErrMsg
@@ -281,15 +273,14 @@ const file_message_v1_message_proto_rawDesc = "" +
 	"\vreceiver_id\x18\x03 \x01(\x04R\n" +
 	"receiverId\x12?\n" +
 	"\x0eserialize_type\x18\x04 \x01(\x0e2\x18.common.v1.SerializeTypeR\rserializeType\x12\x12\n" +
-	"\x04body\x18\x05 \x01(\fR\x04body\"\xab\x01\n" +
+	"\x04body\x18\x05 \x01(\fR\x04body\"|\n" +
 	"\n" +
 	"AckMessage\x12\x1d\n" +
 	"\n" +
 	"message_id\x18\x01 \x01(\tR\tmessageId\x12\x18\n" +
-	"\asuccess\x18\x02 \x01(\bR\asuccess\x12-\n" +
-	"\berr_code\x18\x03 \x01(\x0e2\x12.common.v1.ErrCodeR\aerrCode\x12\x17\n" +
-	"\aerr_msg\x18\x04 \x01(\tR\x06errMsg\x12\x1c\n" +
-	"\ttimestamp\x18\x05 \x01(\x03R\ttimestampB\xa1\x01\n" +
+	"\asuccess\x18\x02 \x01(\bR\asuccess\x12\x17\n" +
+	"\aerr_msg\x18\x03 \x01(\tR\x06errMsg\x12\x1c\n" +
+	"\ttimestamp\x18\x04 \x01(\x03R\ttimestampB\xa1\x01\n" +
 	"\x0ecom.message.v1B\fMessageProtoP\x01Z8github.com/JrMarcco/synp-api/api/go/message/v1;messagev1\xa2\x02\x03MXX\xaa\x02\n" +
 	"Message.V1\xca\x02\n" +
 	"Message\\V1\xe2\x02\x16Message\\V1\\GPBMetadata\xea\x02\vMessage::V1b\x06proto3"
@@ -313,18 +304,16 @@ var file_message_v1_message_proto_goTypes = []any{
 	(*AckMessage)(nil),    // 2: message.v1.AckMessage
 	(v1.CommandType)(0),   // 3: common.v1.CommandType
 	(v1.SerializeType)(0), // 4: common.v1.SerializeType
-	(v1.ErrCode)(0),       // 5: common.v1.ErrCode
 }
 var file_message_v1_message_proto_depIdxs = []int32{
 	3, // 0: message.v1.Message.cmd:type_name -> common.v1.CommandType
 	4, // 1: message.v1.Message.serialize_type:type_name -> common.v1.SerializeType
 	4, // 2: message.v1.PushMessage.serialize_type:type_name -> common.v1.SerializeType
-	5, // 3: message.v1.AckMessage.err_code:type_name -> common.v1.ErrCode
-	4, // [4:4] is the sub-list for method output_type
-	4, // [4:4] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	3, // [3:3] is the sub-list for method output_type
+	3, // [3:3] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_message_v1_message_proto_init() }

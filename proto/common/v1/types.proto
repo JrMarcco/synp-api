@@ -30,7 +30,3 @@ enum SerializeType {
   SERIALIZE_TYPE_PROTOBUF = 1;
   SERIALIZE_TYPE_JSON = 2;
 }
-
-enum ErrCode {
-  ERR_UNSPECIFIED = 0;
-}

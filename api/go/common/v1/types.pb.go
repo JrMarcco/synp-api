@@ -136,49 +136,6 @@ func (SerializeType) EnumDescriptor() ([]byte, []int) {
 	return file_common_v1_types_proto_rawDescGZIP(), []int{1}
 }
 
-type ErrCode int32
-
-const (
-	ErrCode_ERR_UNSPECIFIED ErrCode = 0
-)
-
-// Enum value maps for ErrCode.
-var (
-	ErrCode_name = map[int32]string{
-		0: "ERR_UNSPECIFIED",
-	}
-	ErrCode_value = map[string]int32{
-		"ERR_UNSPECIFIED": 0,
-	}
-)
-
-func (x ErrCode) Enum() *ErrCode {
-	p := new(ErrCode)
-	*p = x
-	return p
-}
-
-func (x ErrCode) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (ErrCode) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_v1_types_proto_enumTypes[2].Descriptor()
-}
-
-func (ErrCode) Type() protoreflect.EnumType {
-	return &file_common_v1_types_proto_enumTypes[2]
-}
-
-func (x ErrCode) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use ErrCode.Descriptor instead.
-func (ErrCode) EnumDescriptor() ([]byte, []int) {
-	return file_common_v1_types_proto_rawDescGZIP(), []int{2}
-}
-
 var File_common_v1_types_proto protoreflect.FileDescriptor
 
 const file_common_v1_types_proto_rawDesc = "" +
@@ -194,9 +151,7 @@ const file_common_v1_types_proto_rawDesc = "" +
 	"\rSerializeType\x12\x1e\n" +
 	"\x1aSERIALIZE_TYPE_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17SERIALIZE_TYPE_PROTOBUF\x10\x01\x12\x17\n" +
-	"\x13SERIALIZE_TYPE_JSON\x10\x02*\x1e\n" +
-	"\aErrCode\x12\x13\n" +
-	"\x0fERR_UNSPECIFIED\x10\x00B\x98\x01\n" +
+	"\x13SERIALIZE_TYPE_JSON\x10\x02B\x98\x01\n" +
 	"\rcom.common.v1B\n" +
 	"TypesProtoP\x01Z6github.com/JrMarcco/synp-api/api/go/common/v1;commonv1\xa2\x02\x03CXX\xaa\x02\tCommon.V1\xca\x02\tCommon\\V1\xe2\x02\x15Common\\V1\\GPBMetadata\xea\x02\n" +
 	"Common::V1b\x06proto3"
@@ -213,11 +168,10 @@ func file_common_v1_types_proto_rawDescGZIP() []byte {
 	return file_common_v1_types_proto_rawDescData
 }
 
-var file_common_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_common_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_common_v1_types_proto_goTypes = []any{
 	(CommandType)(0),   // 0: common.v1.CommandType
 	(SerializeType)(0), // 1: common.v1.SerializeType
-	(ErrCode)(0),       // 2: common.v1.ErrCode
 }
 var file_common_v1_types_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -237,7 +191,7 @@ func file_common_v1_types_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_types_proto_rawDesc), len(file_common_v1_types_proto_rawDesc)),
-			NumEnums:      3,
+			NumEnums:      2,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,
