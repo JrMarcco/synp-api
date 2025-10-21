@@ -104,14 +104,12 @@ func (x *Message) GetBody() []byte {
 // 适用于上行消息和下行消息的 ACK 响应。
 type AckPayload struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
-	// 原始消息的 message_id，用于关联请求。
-	OriginalMessageId string `protobuf:"bytes,1,opt,name=original_message_id,json=originalMessageId,proto3" json:"original_message_id,omitempty"`
 	// 消息处理是否成功。
-	Success bool `protobuf:"varint,2,opt,name=success,proto3" json:"success,omitempty"`
+	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 	// 错误信息（仅在 success = false 时有值）。
-	ErrorMessage string `protobuf:"bytes,3,opt,name=error_message,json=errorMessage,proto3" json:"error_message,omitempty"`
+	ErrorMessage string `protobuf:"bytes,2,opt,name=error_message,json=errorMessage,proto3" json:"error_message,omitempty"`
 	// 服务端处理时间戳（毫秒）。
-	Timestamp     int64 `protobuf:"varint,4,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
+	Timestamp     int64 `protobuf:"varint,3,opt,name=timestamp,proto3" json:"timestamp,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -144,13 +142,6 @@ func (x *AckPayload) ProtoReflect() protoreflect.Message {
 // Deprecated: Use AckPayload.ProtoReflect.Descriptor instead.
 func (*AckPayload) Descriptor() ([]byte, []int) {
 	return file_message_v1_message_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *AckPayload) GetOriginalMessageId() string {
-	if x != nil {
-		return x.OriginalMessageId
-	}
-	return ""
 }
 
 func (x *AckPayload) GetSuccess() bool {
@@ -268,13 +259,12 @@ const file_message_v1_message_proto_rawDesc = "" +
 	"message_id\x18\x01 \x01(\tR\tmessageId\x12(\n" +
 	"\x03cmd\x18\x02 \x01(\x0e2\x16.common.v1.CommandTypeR\x03cmd\x12?\n" +
 	"\x0eserialize_type\x18\x03 \x01(\x0e2\x18.common.v1.SerializeTypeR\rserializeType\x12\x12\n" +
-	"\x04body\x18\x04 \x01(\fR\x04body\"\x99\x01\n" +
+	"\x04body\x18\x04 \x01(\fR\x04body\"i\n" +
 	"\n" +
-	"AckPayload\x12.\n" +
-	"\x13original_message_id\x18\x01 \x01(\tR\x11originalMessageId\x12\x18\n" +
-	"\asuccess\x18\x02 \x01(\bR\asuccess\x12#\n" +
-	"\rerror_message\x18\x03 \x01(\tR\ferrorMessage\x12\x1c\n" +
-	"\ttimestamp\x18\x04 \x01(\x03R\ttimestamp\"\xb9\x01\n" +
+	"AckPayload\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12#\n" +
+	"\rerror_message\x18\x02 \x01(\tR\ferrorMessage\x12\x1c\n" +
+	"\ttimestamp\x18\x03 \x01(\x03R\ttimestamp\"\xb9\x01\n" +
 	"\vPushMessage\x12\x1d\n" +
 	"\n" +
 	"message_id\x18\x01 \x01(\tR\tmessageId\x12\x15\n" +

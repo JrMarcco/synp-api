@@ -167,8 +167,6 @@ func (m *AckPayload) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for OriginalMessageId
-
 	// no validation rules for Success
 
 	// no validation rules for ErrorMessage
