@@ -28,14 +28,18 @@ const (
 	CommandType_COMMAND_TYPE_UNSPECIFIED CommandType = 0
 	// 心跳指令。
 	CommandType_COMMAND_TYPE_HEARTBEAT CommandType = 1
-	// 上行消息: frontend -> gateway -> backend。
+	// 上行消息:  frontend -> gateway -> backend。
 	CommandType_COMMAND_TYPE_UPSTREAM CommandType = 2
-	// 下行消息: backend -> gateway -> backend。
-	CommandType_COMMAND_TYPE_DOWNSTREAM CommandType = 3
+	// 上行消息 ack: gateway -> frontend。
+	CommandType_COMMAND_TYPE_UPSTREAM_ACK CommandType = 3
+	// 下行消息: backend -> gateway -> frontend。
+	CommandType_COMMAND_TYPE_DOWNSTREAM CommandType = 4
+	// 下行消息: frontend -> gateway。
+	CommandType_COMMAND_TYPE_DOWNSTREAM_ACK CommandType = 5
 	// 重定向指令。
-	CommandType_COMMAND_TYPE_REDIRECT CommandType = 4
+	CommandType_COMMAND_TYPE_REDIRECT CommandType = 6
 	// 限流指令：gateway -> frontend。
-	CommandType_COMMAND_TYPE_RATE_LIMIT_EXCEEDED CommandType = 5
+	CommandType_COMMAND_TYPE_RATE_LIMIT_EXCEEDED CommandType = 7
 )
 
 // Enum value maps for CommandType.
@@ -44,17 +48,21 @@ var (
 		0: "COMMAND_TYPE_UNSPECIFIED",
 		1: "COMMAND_TYPE_HEARTBEAT",
 		2: "COMMAND_TYPE_UPSTREAM",
-		3: "COMMAND_TYPE_DOWNSTREAM",
-		4: "COMMAND_TYPE_REDIRECT",
-		5: "COMMAND_TYPE_RATE_LIMIT_EXCEEDED",
+		3: "COMMAND_TYPE_UPSTREAM_ACK",
+		4: "COMMAND_TYPE_DOWNSTREAM",
+		5: "COMMAND_TYPE_DOWNSTREAM_ACK",
+		6: "COMMAND_TYPE_REDIRECT",
+		7: "COMMAND_TYPE_RATE_LIMIT_EXCEEDED",
 	}
 	CommandType_value = map[string]int32{
 		"COMMAND_TYPE_UNSPECIFIED":         0,
 		"COMMAND_TYPE_HEARTBEAT":           1,
 		"COMMAND_TYPE_UPSTREAM":            2,
-		"COMMAND_TYPE_DOWNSTREAM":          3,
-		"COMMAND_TYPE_REDIRECT":            4,
-		"COMMAND_TYPE_RATE_LIMIT_EXCEEDED": 5,
+		"COMMAND_TYPE_UPSTREAM_ACK":        3,
+		"COMMAND_TYPE_DOWNSTREAM":          4,
+		"COMMAND_TYPE_DOWNSTREAM_ACK":      5,
+		"COMMAND_TYPE_REDIRECT":            6,
+		"COMMAND_TYPE_RATE_LIMIT_EXCEEDED": 7,
 	}
 )
 
@@ -140,14 +148,16 @@ var File_common_v1_types_proto protoreflect.FileDescriptor
 
 const file_common_v1_types_proto_rawDesc = "" +
 	"\n" +
-	"\x15common/v1/types.proto\x12\tcommon.v1*\xc0\x01\n" +
+	"\x15common/v1/types.proto\x12\tcommon.v1*\x80\x02\n" +
 	"\vCommandType\x12\x1c\n" +
 	"\x18COMMAND_TYPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16COMMAND_TYPE_HEARTBEAT\x10\x01\x12\x19\n" +
-	"\x15COMMAND_TYPE_UPSTREAM\x10\x02\x12\x1b\n" +
-	"\x17COMMAND_TYPE_DOWNSTREAM\x10\x03\x12\x19\n" +
-	"\x15COMMAND_TYPE_REDIRECT\x10\x04\x12$\n" +
-	" COMMAND_TYPE_RATE_LIMIT_EXCEEDED\x10\x05*e\n" +
+	"\x15COMMAND_TYPE_UPSTREAM\x10\x02\x12\x1d\n" +
+	"\x19COMMAND_TYPE_UPSTREAM_ACK\x10\x03\x12\x1b\n" +
+	"\x17COMMAND_TYPE_DOWNSTREAM\x10\x04\x12\x1f\n" +
+	"\x1bCOMMAND_TYPE_DOWNSTREAM_ACK\x10\x05\x12\x19\n" +
+	"\x15COMMAND_TYPE_REDIRECT\x10\x06\x12$\n" +
+	" COMMAND_TYPE_RATE_LIMIT_EXCEEDED\x10\a*e\n" +
 	"\rSerializeType\x12\x1e\n" +
 	"\x1aSERIALIZE_TYPE_UNSPECIFIED\x10\x00\x12\x1b\n" +
 	"\x17SERIALIZE_TYPE_PROTOBUF\x10\x01\x12\x17\n" +

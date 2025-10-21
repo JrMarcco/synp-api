@@ -22,6 +22,23 @@ message Message {
   bytes body = 4;
 }
 
+// AckPayload 是消息确认的载荷，包含消息的处理结果。
+// 当 Message.cmd = COMMAND_TYPE_ACK 时，该消息会被序列化到 Message.body 中。
+// 适用于上行消息和下行消息的 ACK 响应。
+message AckPayload {
+  // 原始消息的 message_id，用于关联请求。
+  string original_message_id = 1;
+
+  // 消息处理是否成功。
+  bool success = 2;
+
+  // 错误信息（仅在 success = false 时有值）。
+  string error_message = 3;
+
+  // 服务端处理时间戳（毫秒）。
+  int64 timestamp = 4;
+}
+
 // PushMessage 是由后端 ( 业务服务端 ) 主动向网关发送的消息。
 // 通信方式为业务后端推送 PushMessage 到 Kafka 的指定 topic，由网关监听并消费。
 // 网关收到 PushMessage 后，
@@ -37,17 +54,4 @@ message PushMessage {
 
   // 消息体。
   bytes body = 5;
-}
-
-// AckMessage 是消息确认响应，用于告知发送方消息的处理结果。
-// 适用于上行消息和下行消息的 ACK 响应。
-message AckMessage {
-  // 原始消息的 message_id，用于关联请求。
-  string message_id = 1;
-
-  bool success = 2;
-  string err_msg = 3;
-
-  // 服务端处理时间戳（毫秒）。
-  int64 timestamp = 4;
 }

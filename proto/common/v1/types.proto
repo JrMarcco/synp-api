@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package common.v1;
 
-option go_package = "github.com/JrMarcco/synp-api/api/common/v1";
-
 // 消息的指令类型。
 enum CommandType {
   COMMAND_TYPE_UNSPECIFIED = 0;
@@ -11,16 +9,21 @@ enum CommandType {
   // 心跳指令。
   COMMAND_TYPE_HEARTBEAT = 1;
 
-  // 上行消息: frontend -> gateway -> backend。
+  // 上行消息:  frontend -> gateway -> backend。
   COMMAND_TYPE_UPSTREAM = 2;
-  // 下行消息: backend -> gateway -> backend。
-  COMMAND_TYPE_DOWNSTREAM = 3;
+  // 上行消息 ack: gateway -> frontend。
+  COMMAND_TYPE_UPSTREAM_ACK = 3;
+
+  // 下行消息: backend -> gateway -> frontend。
+  COMMAND_TYPE_DOWNSTREAM = 4;
+  // 下行消息: frontend -> gateway。
+  COMMAND_TYPE_DOWNSTREAM_ACK = 5;
 
   // 重定向指令。
-  COMMAND_TYPE_REDIRECT = 4;
+  COMMAND_TYPE_REDIRECT = 6;
 
   // 限流指令：gateway -> frontend。
-  COMMAND_TYPE_RATE_LIMIT_EXCEEDED = 5;
+  COMMAND_TYPE_RATE_LIMIT_EXCEEDED = 7;
 }
 
 // 消息体的序列化类型。
