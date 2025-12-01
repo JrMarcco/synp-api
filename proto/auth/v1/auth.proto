@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package auth.v1;
+
+import "common/v1/types.proto";
+
+message JwtPayload {
+  uint64 biz_id = 1;
+  uint64 user_id = 2;
+  string session_id = 3;
+  common.v1.DeviceType device_type = 4;
+  bool auto_close = 5;
+}

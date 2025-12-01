@@ -7,7 +7,7 @@
 package messagev1
 
 import (
-	v1 "github.com/JrMarcco/synp-api/api/go/common/v1"
+	v1 "github.com/jrmarcco/synp-api/api/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -273,7 +273,7 @@ const file_message_v1_message_proto_rawDesc = "" +
 	"receiverId\x12?\n" +
 	"\x0eserialize_type\x18\x04 \x01(\x0e2\x18.common.v1.SerializeTypeR\rserializeType\x12\x12\n" +
 	"\x04body\x18\x05 \x01(\fR\x04bodyB\xa1\x01\n" +
-	"\x0ecom.message.v1B\fMessageProtoP\x01Z8github.com/JrMarcco/synp-api/api/go/message/v1;messagev1\xa2\x02\x03MXX\xaa\x02\n" +
+	"\x0ecom.message.v1B\fMessageProtoP\x01Z8github.com/jrmarcco/synp-api/api/go/message/v1;messagev1\xa2\x02\x03MXX\xaa\x02\n" +
 	"Message.V1\xca\x02\n" +
 	"Message\\V1\xe2\x02\x16Message\\V1\\GPBMetadata\xea\x02\vMessage::V1b\x06proto3"
 

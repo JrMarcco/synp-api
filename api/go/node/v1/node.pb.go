@@ -188,7 +188,7 @@ const file_node_v1_node_proto_rawDesc = "" +
 	"\x06labels\x18\b \x03(\tR\x06labels\"/\n" +
 	"\bNodeList\x12#\n" +
 	"\x05nodes\x18\x01 \x03(\v2\r.node.v1.NodeR\x05nodesB\x89\x01\n" +
-	"\vcom.node.v1B\tNodeProtoP\x01Z2github.com/JrMarcco/synp-api/api/go/node/v1;nodev1\xa2\x02\x03NXX\xaa\x02\aNode.V1\xca\x02\aNode\\V1\xe2\x02\x13Node\\V1\\GPBMetadata\xea\x02\bNode::V1b\x06proto3"
+	"\vcom.node.v1B\tNodeProtoP\x01Z2github.com/jrmarcco/synp-api/api/go/node/v1;nodev1\xa2\x02\x03NXX\xaa\x02\aNode.V1\xca\x02\aNode\\V1\xe2\x02\x13Node\\V1\\GPBMetadata\xea\x02\bNode::V1b\x06proto3"
 
 var (
 	file_node_v1_node_proto_rawDescOnce sync.Once
