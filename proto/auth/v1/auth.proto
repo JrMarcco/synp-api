@@ -2,12 +2,8 @@ syntax = "proto3";
 
 package auth.v1;
 
-import "common/v1/types.proto";
-
 message JwtPayload {
   uint64 biz_id = 1;
   uint64 user_id = 2;
-  string session_id = 3;    // 这里的 session 指的是业务系统的 session 而不是网关的
-  common.v1.DeviceType device_type = 4;
-  bool auto_close = 5;
+  string session_id = 3; // 这里的 session 指的是业务系统的 session 而不是网关的
 }

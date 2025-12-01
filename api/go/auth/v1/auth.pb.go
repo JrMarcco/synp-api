@@ -7,7 +7,6 @@
 package authv1
 
 import (
-	v1 "github.com/jrmarcco/synp-api/api/go/common/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -26,9 +25,7 @@ type JwtPayload struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	BizId         uint64                 `protobuf:"varint,1,opt,name=biz_id,json=bizId,proto3" json:"biz_id,omitempty"`
 	UserId        uint64                 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	SessionId     string                 `protobuf:"bytes,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"`
-	DeviceType    v1.DeviceType          `protobuf:"varint,4,opt,name=device_type,json=deviceType,proto3,enum=common.v1.DeviceType" json:"device_type,omitempty"`
-	AutoClose     bool                   `protobuf:"varint,5,opt,name=auto_close,json=autoClose,proto3" json:"auto_close,omitempty"`
+	SessionId     string                 `protobuf:"bytes,3,opt,name=session_id,json=sessionId,proto3" json:"session_id,omitempty"` // 这里的 session 指的是业务系统的 session 而不是网关的
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -84,35 +81,17 @@ func (x *JwtPayload) GetSessionId() string {
 	return ""
 }
 
-func (x *JwtPayload) GetDeviceType() v1.DeviceType {
-	if x != nil {
-		return x.DeviceType
-	}
-	return v1.DeviceType(0)
-}
-
-func (x *JwtPayload) GetAutoClose() bool {
-	if x != nil {
-		return x.AutoClose
-	}
-	return false
-}
-
 var File_auth_v1_auth_proto protoreflect.FileDescriptor
 
 const file_auth_v1_auth_proto_rawDesc = "" +
 	"\n" +
-	"\x12auth/v1/auth.proto\x12\aauth.v1\x1a\x15common/v1/types.proto\"\xb2\x01\n" +
+	"\x12auth/v1/auth.proto\x12\aauth.v1\"[\n" +
 	"\n" +
 	"JwtPayload\x12\x15\n" +
 	"\x06biz_id\x18\x01 \x01(\x04R\x05bizId\x12\x17\n" +
 	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x1d\n" +
 	"\n" +
-	"session_id\x18\x03 \x01(\tR\tsessionId\x126\n" +
-	"\vdevice_type\x18\x04 \x01(\x0e2\x15.common.v1.DeviceTypeR\n" +
-	"deviceType\x12\x1d\n" +
-	"\n" +
-	"auto_close\x18\x05 \x01(\bR\tautoCloseB\x89\x01\n" +
+	"session_id\x18\x03 \x01(\tR\tsessionIdB\x89\x01\n" +
 	"\vcom.auth.v1B\tAuthProtoP\x01Z2github.com/jrmarcco/synp-api/api/go/auth/v1;authv1\xa2\x02\x03AXX\xaa\x02\aAuth.V1\xca\x02\aAuth\\V1\xe2\x02\x13Auth\\V1\\GPBMetadata\xea\x02\bAuth::V1b\x06proto3"
 
 var (
@@ -130,15 +109,13 @@ func file_auth_v1_auth_proto_rawDescGZIP() []byte {
 var file_auth_v1_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_auth_v1_auth_proto_goTypes = []any{
 	(*JwtPayload)(nil), // 0: auth.v1.JwtPayload
-	(v1.DeviceType)(0), // 1: common.v1.DeviceType
 }
 var file_auth_v1_auth_proto_depIdxs = []int32{
-	1, // 0: auth.v1.JwtPayload.device_type:type_name -> common.v1.DeviceType
-	1, // [1:1] is the sub-list for method output_type
-	1, // [1:1] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	0, // [0:0] is the sub-list for method output_type
+	0, // [0:0] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_auth_v1_auth_proto_init() }

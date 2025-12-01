@@ -21,58 +21,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type DeviceType int32
-
-const (
-	DeviceType_DEVICE_TYPE_UNSPECIFIED DeviceType = 0
-	DeviceType_DEVICE_TYPE_MOBILE      DeviceType = 1
-	DeviceType_DEVICE_TYPE_TABLET      DeviceType = 2
-	DeviceType_DEVICE_TYPE_PC          DeviceType = 3
-)
-
-// Enum value maps for DeviceType.
-var (
-	DeviceType_name = map[int32]string{
-		0: "DEVICE_TYPE_UNSPECIFIED",
-		1: "DEVICE_TYPE_MOBILE",
-		2: "DEVICE_TYPE_TABLET",
-		3: "DEVICE_TYPE_PC",
-	}
-	DeviceType_value = map[string]int32{
-		"DEVICE_TYPE_UNSPECIFIED": 0,
-		"DEVICE_TYPE_MOBILE":      1,
-		"DEVICE_TYPE_TABLET":      2,
-		"DEVICE_TYPE_PC":          3,
-	}
-)
-
-func (x DeviceType) Enum() *DeviceType {
-	p := new(DeviceType)
-	*p = x
-	return p
-}
-
-func (x DeviceType) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (DeviceType) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_v1_types_proto_enumTypes[0].Descriptor()
-}
-
-func (DeviceType) Type() protoreflect.EnumType {
-	return &file_common_v1_types_proto_enumTypes[0]
-}
-
-func (x DeviceType) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use DeviceType.Descriptor instead.
-func (DeviceType) EnumDescriptor() ([]byte, []int) {
-	return file_common_v1_types_proto_rawDescGZIP(), []int{0}
-}
-
 // 消息的指令类型。
 type CommandType int32
 
@@ -129,11 +77,11 @@ func (x CommandType) String() string {
 }
 
 func (CommandType) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_v1_types_proto_enumTypes[1].Descriptor()
+	return file_common_v1_types_proto_enumTypes[0].Descriptor()
 }
 
 func (CommandType) Type() protoreflect.EnumType {
-	return &file_common_v1_types_proto_enumTypes[1]
+	return &file_common_v1_types_proto_enumTypes[0]
 }
 
 func (x CommandType) Number() protoreflect.EnumNumber {
@@ -142,7 +90,7 @@ func (x CommandType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use CommandType.Descriptor instead.
 func (CommandType) EnumDescriptor() ([]byte, []int) {
-	return file_common_v1_types_proto_rawDescGZIP(), []int{1}
+	return file_common_v1_types_proto_rawDescGZIP(), []int{0}
 }
 
 // 消息体的序列化类型。
@@ -180,11 +128,11 @@ func (x SerializeType) String() string {
 }
 
 func (SerializeType) Descriptor() protoreflect.EnumDescriptor {
-	return file_common_v1_types_proto_enumTypes[2].Descriptor()
+	return file_common_v1_types_proto_enumTypes[1].Descriptor()
 }
 
 func (SerializeType) Type() protoreflect.EnumType {
-	return &file_common_v1_types_proto_enumTypes[2]
+	return &file_common_v1_types_proto_enumTypes[1]
 }
 
 func (x SerializeType) Number() protoreflect.EnumNumber {
@@ -193,20 +141,14 @@ func (x SerializeType) Number() protoreflect.EnumNumber {
 
 // Deprecated: Use SerializeType.Descriptor instead.
 func (SerializeType) EnumDescriptor() ([]byte, []int) {
-	return file_common_v1_types_proto_rawDescGZIP(), []int{2}
+	return file_common_v1_types_proto_rawDescGZIP(), []int{1}
 }
 
 var File_common_v1_types_proto protoreflect.FileDescriptor
 
 const file_common_v1_types_proto_rawDesc = "" +
 	"\n" +
-	"\x15common/v1/types.proto\x12\tcommon.v1*m\n" +
-	"\n" +
-	"DeviceType\x12\x1b\n" +
-	"\x17DEVICE_TYPE_UNSPECIFIED\x10\x00\x12\x16\n" +
-	"\x12DEVICE_TYPE_MOBILE\x10\x01\x12\x16\n" +
-	"\x12DEVICE_TYPE_TABLET\x10\x02\x12\x12\n" +
-	"\x0eDEVICE_TYPE_PC\x10\x03*\x80\x02\n" +
+	"\x15common/v1/types.proto\x12\tcommon.v1*\x80\x02\n" +
 	"\vCommandType\x12\x1c\n" +
 	"\x18COMMAND_TYPE_UNSPECIFIED\x10\x00\x12\x1a\n" +
 	"\x16COMMAND_TYPE_HEARTBEAT\x10\x01\x12\x19\n" +
@@ -236,11 +178,10 @@ func file_common_v1_types_proto_rawDescGZIP() []byte {
 	return file_common_v1_types_proto_rawDescData
 }
 
-var file_common_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_common_v1_types_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_common_v1_types_proto_goTypes = []any{
-	(DeviceType)(0),    // 0: common.v1.DeviceType
-	(CommandType)(0),   // 1: common.v1.CommandType
-	(SerializeType)(0), // 2: common.v1.SerializeType
+	(CommandType)(0),   // 0: common.v1.CommandType
+	(SerializeType)(0), // 1: common.v1.SerializeType
 }
 var file_common_v1_types_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -260,7 +201,7 @@ func file_common_v1_types_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_common_v1_types_proto_rawDesc), len(file_common_v1_types_proto_rawDesc)),
-			NumEnums:      3,
+			NumEnums:      2,
 			NumMessages:   0,
 			NumExtensions: 0,
 			NumServices:   0,

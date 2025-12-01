@@ -17,8 +17,6 @@ import (
 	"unicode/utf8"
 
 	"google.golang.org/protobuf/types/known/anypb"
-
-	commonv1 "github.com/jrmarcco/synp-api/api/go/common/v1"
 )
 
 // ensure the imports are used
@@ -35,8 +33,6 @@ var (
 	_ = (*mail.Address)(nil)
 	_ = anypb.Any{}
 	_ = sort.Sort
-
-	_ = commonv1.DeviceType(0)
 )
 
 // Validate checks the field values on JwtPayload with the rules defined in the
@@ -66,10 +62,6 @@ func (m *JwtPayload) validate(all bool) error {
 	// no validation rules for UserId
 
 	// no validation rules for SessionId
-
-	// no validation rules for DeviceType
-
-	// no validation rules for AutoClose
 
 	if len(errors) > 0 {
 		return JwtPayloadMultiError(errors)

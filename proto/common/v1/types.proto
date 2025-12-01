@@ -2,16 +2,6 @@ syntax = "proto3";
 
 package common.v1;
 
-enum DeviceType {
-  DEVICE_TYPE_UNSPECIFIED = 0;
-
-  DEVICE_TYPE_MOBILE = 1;
-
-  DEVICE_TYPE_TABLET = 2;
-
-  DEVICE_TYPE_PC = 3;
-}
-
 // 消息的指令类型。
 enum CommandType {
   COMMAND_TYPE_UNSPECIFIED = 0;
