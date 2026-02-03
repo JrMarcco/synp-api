@@ -62,6 +62,10 @@ func (m *Message) validate(all bool) error {
 
 	// no validation rules for MessageId
 
+	// no validation rules for DestinationId
+
+	// no validation rules for DestinationType
+
 	// no validation rules for Cmd
 
 	// no validation rules for SerializeType

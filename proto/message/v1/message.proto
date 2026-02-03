@@ -4,22 +4,27 @@ package message.v1;
 
 import "common/v1/types.proto";
 
-// Message 是前端 (业务客户端) 和网关之间的通信消息。
+// Message 是前端 ( 业务客户端 ) 和网关之间的通信消息。
 message Message {
   // 由前端 ( 业务客户端 ) 生成，有 2 个作用:
   //  1.消息去重；
   //  2.对 message_id 进行 hash，选择消息队列分区从而保证消息有序性。
   string message_id = 1;
 
+  // 目的地频道 ID ( 在网关用于获取目的地用户所在的 WebSocket )。
+  string destination_id = 2;
+  // 目的地频道类型 ( 单聊 / 群聊 )
+  string destination_type = 3;
+
   // 消息类型。
   // 这里不使用 MessageType type 作为字段名是因为 type 在 go 里面是关键字。
-  common.v1.CommandType cmd = 2;
+  common.v1.CommandType cmd = 4;
 
   // body 的序列化类型。
-  common.v1.SerializeType serialize_type = 3;
+  common.v1.SerializeType serialize_type = 5;
 
   // 消息体。
-  bytes body = 4;
+  bytes body = 6;
 }
 
 // AckPayload 是消息确认的载荷，包含消息的处理结果。
@@ -29,7 +34,7 @@ message AckPayload {
   // 消息处理是否成功。
   bool success = 1;
 
-  // 错误信息（仅在 success = false 时有值）。
+  // 错误信息（ 仅在 success = false 时有值 ）。
   string error_message = 2;
 
   // 服务端处理时间戳（毫秒）。
