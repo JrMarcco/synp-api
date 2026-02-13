@@ -27,8 +27,21 @@ type Message struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 由前端 ( 业务客户端 ) 生成，有 2 个作用:
 	//
-	//	1.消息去重；
+	//	1.消息去重。
 	//	2.对 message_id 进行 hash，选择消息队列分区从而保证消息有序性。
+	//
+	// message_id 需要由前端生成 ( 建议使用 ULID )
+	//
+	//	npm install ulid
+	//	或
+	//	yarn add ulid
+	//
+	//	import { ulid } from 'ulid'
+	//
+	//	const messageId = ulid()
+	//
+	//	// 也支持从时间戳生成
+	//	const messageId = ulid(Date.now())
 	MessageId string `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
 	// 目的地频道 ID ( 在网关用于获取目的地用户所在的 WebSocket )。
 	DestinationId string `protobuf:"bytes,2,opt,name=destination_id,json=destinationId,proto3" json:"destination_id,omitempty"`
