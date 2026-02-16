@@ -279,6 +279,86 @@ func (x *PushMessage) GetBody() []byte {
 	return nil
 }
 
+type PushRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Msg           *PushMessage           `protobuf:"bytes,1,opt,name=msg,proto3" json:"msg,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PushRequest) Reset() {
+	*x = PushRequest{}
+	mi := &file_message_v1_message_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PushRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PushRequest) ProtoMessage() {}
+
+func (x *PushRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_message_v1_message_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PushRequest.ProtoReflect.Descriptor instead.
+func (*PushRequest) Descriptor() ([]byte, []int) {
+	return file_message_v1_message_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *PushRequest) GetMsg() *PushMessage {
+	if x != nil {
+		return x.Msg
+	}
+	return nil
+}
+
+type PushResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PushResponse) Reset() {
+	*x = PushResponse{}
+	mi := &file_message_v1_message_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PushResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PushResponse) ProtoMessage() {}
+
+func (x *PushResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_message_v1_message_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PushResponse.ProtoReflect.Descriptor instead.
+func (*PushResponse) Descriptor() ([]byte, []int) {
+	return file_message_v1_message_proto_rawDescGZIP(), []int{4}
+}
+
 var File_message_v1_message_proto protoreflect.FileDescriptor
 
 const file_message_v1_message_proto_rawDesc = "" +
@@ -305,7 +385,12 @@ const file_message_v1_message_proto_rawDesc = "" +
 	"\vreceiver_id\x18\x03 \x01(\x04R\n" +
 	"receiverId\x12?\n" +
 	"\x0eserialize_type\x18\x04 \x01(\x0e2\x18.common.v1.SerializeTypeR\rserializeType\x12\x12\n" +
-	"\x04body\x18\x05 \x01(\fR\x04bodyB\xa1\x01\n" +
+	"\x04body\x18\x05 \x01(\fR\x04body\"8\n" +
+	"\vPushRequest\x12)\n" +
+	"\x03msg\x18\x01 \x01(\v2\x17.message.v1.PushMessageR\x03msg\"\x0e\n" +
+	"\fPushResponse2H\n" +
+	"\vPushService\x129\n" +
+	"\x04Push\x12\x17.message.v1.PushRequest\x1a\x18.message.v1.PushResponseB\xa1\x01\n" +
 	"\x0ecom.message.v1B\fMessageProtoP\x01Z8github.com/jrmarcco/synp-api/api/go/message/v1;messagev1\xa2\x02\x03MXX\xaa\x02\n" +
 	"Message.V1\xca\x02\n" +
 	"Message\\V1\xe2\x02\x16Message\\V1\\GPBMetadata\xea\x02\vMessage::V1b\x06proto3"
@@ -322,23 +407,28 @@ func file_message_v1_message_proto_rawDescGZIP() []byte {
 	return file_message_v1_message_proto_rawDescData
 }
 
-var file_message_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_message_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_message_v1_message_proto_goTypes = []any{
 	(*Message)(nil),       // 0: message.v1.Message
 	(*AckPayload)(nil),    // 1: message.v1.AckPayload
 	(*PushMessage)(nil),   // 2: message.v1.PushMessage
-	(v1.CommandType)(0),   // 3: common.v1.CommandType
-	(v1.SerializeType)(0), // 4: common.v1.SerializeType
+	(*PushRequest)(nil),   // 3: message.v1.PushRequest
+	(*PushResponse)(nil),  // 4: message.v1.PushResponse
+	(v1.CommandType)(0),   // 5: common.v1.CommandType
+	(v1.SerializeType)(0), // 6: common.v1.SerializeType
 }
 var file_message_v1_message_proto_depIdxs = []int32{
-	3, // 0: message.v1.Message.cmd:type_name -> common.v1.CommandType
-	4, // 1: message.v1.Message.serialize_type:type_name -> common.v1.SerializeType
-	4, // 2: message.v1.PushMessage.serialize_type:type_name -> common.v1.SerializeType
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	5, // 0: message.v1.Message.cmd:type_name -> common.v1.CommandType
+	6, // 1: message.v1.Message.serialize_type:type_name -> common.v1.SerializeType
+	6, // 2: message.v1.PushMessage.serialize_type:type_name -> common.v1.SerializeType
+	2, // 3: message.v1.PushRequest.msg:type_name -> message.v1.PushMessage
+	3, // 4: message.v1.PushService.Push:input_type -> message.v1.PushRequest
+	4, // 5: message.v1.PushService.Push:output_type -> message.v1.PushResponse
+	5, // [5:6] is the sub-list for method output_type
+	4, // [4:5] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_message_v1_message_proto_init() }
@@ -352,9 +442,9 @@ func file_message_v1_message_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_message_v1_message_proto_rawDesc), len(file_message_v1_message_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   5,
 			NumExtensions: 0,
-			NumServices:   0,
+			NumServices:   1,
 		},
 		GoTypes:           file_message_v1_message_proto_goTypes,
 		DependencyIndexes: file_message_v1_message_proto_depIdxs,

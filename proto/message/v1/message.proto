@@ -70,3 +70,17 @@ message PushMessage {
   // 消息体。
   bytes body = 5;
 }
+
+// PushService 由网关提供给后端 ( 业务服务端 ) 调用。
+// 用于以 kafka 通信外的方式主动向前端 ( 业务服务端 ) 推送消息。
+//
+// 前端消息 → 网关 → Kafka → 后端落库 → RPC调用网关 → 目标用户
+service PushService {
+  rpc Push(PushRequest) returns (PushResponse);
+}
+
+message PushRequest {
+  PushMessage msg = 1;
+}
+
+message PushResponse {}
