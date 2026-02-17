@@ -22,6 +22,64 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type PushStatus int32
+
+const (
+	PushStatus_PUSH_STATUS_UNSPECIFIED     PushStatus = 0
+	PushStatus_PUSH_STATUS_SUCCESS         PushStatus = 1 // 成功
+	PushStatus_PUSH_STATUS_USER_OFFLINE    PushStatus = 2 // 用户离线
+	PushStatus_PUSH_STATUS_RATE_LIMITED    PushStatus = 3 // 限流
+	PushStatus_PUSH_STATUS_INVALID_MESSAGE PushStatus = 4 // 消息格式错误
+	PushStatus_PUSH_STATUS_INTERNAL_ERROR  PushStatus = 5 // 内部错误
+)
+
+// Enum value maps for PushStatus.
+var (
+	PushStatus_name = map[int32]string{
+		0: "PUSH_STATUS_UNSPECIFIED",
+		1: "PUSH_STATUS_SUCCESS",
+		2: "PUSH_STATUS_USER_OFFLINE",
+		3: "PUSH_STATUS_RATE_LIMITED",
+		4: "PUSH_STATUS_INVALID_MESSAGE",
+		5: "PUSH_STATUS_INTERNAL_ERROR",
+	}
+	PushStatus_value = map[string]int32{
+		"PUSH_STATUS_UNSPECIFIED":     0,
+		"PUSH_STATUS_SUCCESS":         1,
+		"PUSH_STATUS_USER_OFFLINE":    2,
+		"PUSH_STATUS_RATE_LIMITED":    3,
+		"PUSH_STATUS_INVALID_MESSAGE": 4,
+		"PUSH_STATUS_INTERNAL_ERROR":  5,
+	}
+)
+
+func (x PushStatus) Enum() *PushStatus {
+	p := new(PushStatus)
+	*p = x
+	return p
+}
+
+func (x PushStatus) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (PushStatus) Descriptor() protoreflect.EnumDescriptor {
+	return file_message_v1_message_proto_enumTypes[0].Descriptor()
+}
+
+func (PushStatus) Type() protoreflect.EnumType {
+	return &file_message_v1_message_proto_enumTypes[0]
+}
+
+func (x PushStatus) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use PushStatus.Descriptor instead.
+func (PushStatus) EnumDescriptor() ([]byte, []int) {
+	return file_message_v1_message_proto_rawDescGZIP(), []int{0}
+}
+
 // Message 是前端 ( 业务客户端 ) 和网关之间的通信消息。
 type Message struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -43,17 +101,13 @@ type Message struct {
 	//	// 也支持从时间戳生成
 	//	const messageId = ulid(Date.now())
 	MessageId string `protobuf:"bytes,1,opt,name=message_id,json=messageId,proto3" json:"message_id,omitempty"`
-	// 目的地频道 ID ( 在网关用于获取目的地用户所在的 WebSocket )。
-	DestinationId string `protobuf:"bytes,2,opt,name=destination_id,json=destinationId,proto3" json:"destination_id,omitempty"`
-	// 目的地频道类型 ( 单聊 / 群聊 )
-	DestinationType string `protobuf:"bytes,3,opt,name=destination_type,json=destinationType,proto3" json:"destination_type,omitempty"`
 	// 消息类型。
 	// 这里不使用 MessageType type 作为字段名是因为 type 在 go 里面是关键字。
-	Cmd v1.CommandType `protobuf:"varint,4,opt,name=cmd,proto3,enum=common.v1.CommandType" json:"cmd,omitempty"`
+	Cmd v1.CommandType `protobuf:"varint,2,opt,name=cmd,proto3,enum=common.v1.CommandType" json:"cmd,omitempty"`
 	// body 的序列化类型。
-	SerializeType v1.SerializeType `protobuf:"varint,5,opt,name=serialize_type,json=serializeType,proto3,enum=common.v1.SerializeType" json:"serialize_type,omitempty"`
+	SerializeType v1.SerializeType `protobuf:"varint,3,opt,name=serialize_type,json=serializeType,proto3,enum=common.v1.SerializeType" json:"serialize_type,omitempty"`
 	// 消息体。
-	Body          []byte `protobuf:"bytes,6,opt,name=body,proto3" json:"body,omitempty"`
+	Body          []byte `protobuf:"bytes,4,opt,name=body,proto3" json:"body,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -91,20 +145,6 @@ func (*Message) Descriptor() ([]byte, []int) {
 func (x *Message) GetMessageId() string {
 	if x != nil {
 		return x.MessageId
-	}
-	return ""
-}
-
-func (x *Message) GetDestinationId() string {
-	if x != nil {
-		return x.DestinationId
-	}
-	return ""
-}
-
-func (x *Message) GetDestinationType() string {
-	if x != nil {
-		return x.DestinationType
 	}
 	return ""
 }
@@ -281,7 +321,8 @@ func (x *PushMessage) GetBody() []byte {
 
 type PushRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Msg           *PushMessage           `protobuf:"bytes,1,opt,name=msg,proto3" json:"msg,omitempty"`
+	Message       *PushMessage           `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	NeedRetry     bool                   `protobuf:"varint,2,opt,name=need_retry,json=needRetry,proto3" json:"need_retry,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -316,15 +357,24 @@ func (*PushRequest) Descriptor() ([]byte, []int) {
 	return file_message_v1_message_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *PushRequest) GetMsg() *PushMessage {
+func (x *PushRequest) GetMessage() *PushMessage {
 	if x != nil {
-		return x.Msg
+		return x.Message
 	}
 	return nil
 }
 
+func (x *PushRequest) GetNeedRetry() bool {
+	if x != nil {
+		return x.NeedRetry
+	}
+	return false
+}
+
 type PushResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Status        PushStatus             `protobuf:"varint,1,opt,name=status,proto3,enum=message.v1.PushStatus" json:"status,omitempty"`
+	ErrorMessage  string                 `protobuf:"bytes,2,opt,name=error_message,json=errorMessage,proto3" json:"error_message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -359,20 +409,148 @@ func (*PushResponse) Descriptor() ([]byte, []int) {
 	return file_message_v1_message_proto_rawDescGZIP(), []int{4}
 }
 
+func (x *PushResponse) GetStatus() PushStatus {
+	if x != nil {
+		return x.Status
+	}
+	return PushStatus_PUSH_STATUS_UNSPECIFIED
+}
+
+func (x *PushResponse) GetErrorMessage() string {
+	if x != nil {
+		return x.ErrorMessage
+	}
+	return ""
+}
+
+type BatchPushRequest struct {
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	Messages []*PushMessage         `protobuf:"bytes,1,rep,name=messages,proto3" json:"messages,omitempty"`
+	// 预留字段。
+	// 可选的回调地址 ( 用于结果通知 )。
+	CallbackUrl   string `protobuf:"bytes,2,opt,name=callback_url,json=callbackUrl,proto3" json:"callback_url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BatchPushRequest) Reset() {
+	*x = BatchPushRequest{}
+	mi := &file_message_v1_message_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BatchPushRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BatchPushRequest) ProtoMessage() {}
+
+func (x *BatchPushRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_message_v1_message_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BatchPushRequest.ProtoReflect.Descriptor instead.
+func (*BatchPushRequest) Descriptor() ([]byte, []int) {
+	return file_message_v1_message_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *BatchPushRequest) GetMessages() []*PushMessage {
+	if x != nil {
+		return x.Messages
+	}
+	return nil
+}
+
+func (x *BatchPushRequest) GetCallbackUrl() string {
+	if x != nil {
+		return x.CallbackUrl
+	}
+	return ""
+}
+
+// BatchPushResponse 批量推送响应。
+// 目前均为预留字段。
+type BatchPushResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TaskId        string                 `protobuf:"bytes,1,opt,name=task_id,json=taskId,proto3" json:"task_id,omitempty"`
+	AcceptedCount int32                  `protobuf:"varint,2,opt,name=accepted_count,json=acceptedCount,proto3" json:"accepted_count,omitempty"`
+	RejectedCount int32                  `protobuf:"varint,3,opt,name=rejected_count,json=rejectedCount,proto3" json:"rejected_count,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BatchPushResponse) Reset() {
+	*x = BatchPushResponse{}
+	mi := &file_message_v1_message_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BatchPushResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BatchPushResponse) ProtoMessage() {}
+
+func (x *BatchPushResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_message_v1_message_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BatchPushResponse.ProtoReflect.Descriptor instead.
+func (*BatchPushResponse) Descriptor() ([]byte, []int) {
+	return file_message_v1_message_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *BatchPushResponse) GetTaskId() string {
+	if x != nil {
+		return x.TaskId
+	}
+	return ""
+}
+
+func (x *BatchPushResponse) GetAcceptedCount() int32 {
+	if x != nil {
+		return x.AcceptedCount
+	}
+	return 0
+}
+
+func (x *BatchPushResponse) GetRejectedCount() int32 {
+	if x != nil {
+		return x.RejectedCount
+	}
+	return 0
+}
+
 var File_message_v1_message_proto protoreflect.FileDescriptor
 
 const file_message_v1_message_proto_rawDesc = "" +
 	"\n" +
 	"\x18message/v1/message.proto\x12\n" +
-	"message.v1\x1a\x15common/v1/types.proto\"\xf9\x01\n" +
+	"message.v1\x1a\x15common/v1/types.proto\"\xa7\x01\n" +
 	"\aMessage\x12\x1d\n" +
 	"\n" +
-	"message_id\x18\x01 \x01(\tR\tmessageId\x12%\n" +
-	"\x0edestination_id\x18\x02 \x01(\tR\rdestinationId\x12)\n" +
-	"\x10destination_type\x18\x03 \x01(\tR\x0fdestinationType\x12(\n" +
-	"\x03cmd\x18\x04 \x01(\x0e2\x16.common.v1.CommandTypeR\x03cmd\x12?\n" +
-	"\x0eserialize_type\x18\x05 \x01(\x0e2\x18.common.v1.SerializeTypeR\rserializeType\x12\x12\n" +
-	"\x04body\x18\x06 \x01(\fR\x04body\"i\n" +
+	"message_id\x18\x01 \x01(\tR\tmessageId\x12(\n" +
+	"\x03cmd\x18\x02 \x01(\x0e2\x16.common.v1.CommandTypeR\x03cmd\x12?\n" +
+	"\x0eserialize_type\x18\x03 \x01(\x0e2\x18.common.v1.SerializeTypeR\rserializeType\x12\x12\n" +
+	"\x04body\x18\x04 \x01(\fR\x04body\"i\n" +
 	"\n" +
 	"AckPayload\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12#\n" +
@@ -385,12 +563,32 @@ const file_message_v1_message_proto_rawDesc = "" +
 	"\vreceiver_id\x18\x03 \x01(\x04R\n" +
 	"receiverId\x12?\n" +
 	"\x0eserialize_type\x18\x04 \x01(\x0e2\x18.common.v1.SerializeTypeR\rserializeType\x12\x12\n" +
-	"\x04body\x18\x05 \x01(\fR\x04body\"8\n" +
-	"\vPushRequest\x12)\n" +
-	"\x03msg\x18\x01 \x01(\v2\x17.message.v1.PushMessageR\x03msg\"\x0e\n" +
-	"\fPushResponse2H\n" +
+	"\x04body\x18\x05 \x01(\fR\x04body\"_\n" +
+	"\vPushRequest\x121\n" +
+	"\amessage\x18\x01 \x01(\v2\x17.message.v1.PushMessageR\amessage\x12\x1d\n" +
+	"\n" +
+	"need_retry\x18\x02 \x01(\bR\tneedRetry\"c\n" +
+	"\fPushResponse\x12.\n" +
+	"\x06status\x18\x01 \x01(\x0e2\x16.message.v1.PushStatusR\x06status\x12#\n" +
+	"\rerror_message\x18\x02 \x01(\tR\ferrorMessage\"j\n" +
+	"\x10BatchPushRequest\x123\n" +
+	"\bmessages\x18\x01 \x03(\v2\x17.message.v1.PushMessageR\bmessages\x12!\n" +
+	"\fcallback_url\x18\x02 \x01(\tR\vcallbackUrl\"z\n" +
+	"\x11BatchPushResponse\x12\x17\n" +
+	"\atask_id\x18\x01 \x01(\tR\x06taskId\x12%\n" +
+	"\x0eaccepted_count\x18\x02 \x01(\x05R\racceptedCount\x12%\n" +
+	"\x0erejected_count\x18\x03 \x01(\x05R\rrejectedCount*\xbf\x01\n" +
+	"\n" +
+	"PushStatus\x12\x1b\n" +
+	"\x17PUSH_STATUS_UNSPECIFIED\x10\x00\x12\x17\n" +
+	"\x13PUSH_STATUS_SUCCESS\x10\x01\x12\x1c\n" +
+	"\x18PUSH_STATUS_USER_OFFLINE\x10\x02\x12\x1c\n" +
+	"\x18PUSH_STATUS_RATE_LIMITED\x10\x03\x12\x1f\n" +
+	"\x1bPUSH_STATUS_INVALID_MESSAGE\x10\x04\x12\x1e\n" +
+	"\x1aPUSH_STATUS_INTERNAL_ERROR\x10\x052\x92\x01\n" +
 	"\vPushService\x129\n" +
-	"\x04Push\x12\x17.message.v1.PushRequest\x1a\x18.message.v1.PushResponseB\xa1\x01\n" +
+	"\x04Push\x12\x17.message.v1.PushRequest\x1a\x18.message.v1.PushResponse\x12H\n" +
+	"\tBatchPush\x12\x1c.message.v1.BatchPushRequest\x1a\x1d.message.v1.BatchPushResponseB\xa1\x01\n" +
 	"\x0ecom.message.v1B\fMessageProtoP\x01Z8github.com/jrmarcco/synp-api/api/go/message/v1;messagev1\xa2\x02\x03MXX\xaa\x02\n" +
 	"Message.V1\xca\x02\n" +
 	"Message\\V1\xe2\x02\x16Message\\V1\\GPBMetadata\xea\x02\vMessage::V1b\x06proto3"
@@ -407,28 +605,36 @@ func file_message_v1_message_proto_rawDescGZIP() []byte {
 	return file_message_v1_message_proto_rawDescData
 }
 
-var file_message_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_message_v1_message_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_message_v1_message_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_message_v1_message_proto_goTypes = []any{
-	(*Message)(nil),       // 0: message.v1.Message
-	(*AckPayload)(nil),    // 1: message.v1.AckPayload
-	(*PushMessage)(nil),   // 2: message.v1.PushMessage
-	(*PushRequest)(nil),   // 3: message.v1.PushRequest
-	(*PushResponse)(nil),  // 4: message.v1.PushResponse
-	(v1.CommandType)(0),   // 5: common.v1.CommandType
-	(v1.SerializeType)(0), // 6: common.v1.SerializeType
+	(PushStatus)(0),           // 0: message.v1.PushStatus
+	(*Message)(nil),           // 1: message.v1.Message
+	(*AckPayload)(nil),        // 2: message.v1.AckPayload
+	(*PushMessage)(nil),       // 3: message.v1.PushMessage
+	(*PushRequest)(nil),       // 4: message.v1.PushRequest
+	(*PushResponse)(nil),      // 5: message.v1.PushResponse
+	(*BatchPushRequest)(nil),  // 6: message.v1.BatchPushRequest
+	(*BatchPushResponse)(nil), // 7: message.v1.BatchPushResponse
+	(v1.CommandType)(0),       // 8: common.v1.CommandType
+	(v1.SerializeType)(0),     // 9: common.v1.SerializeType
 }
 var file_message_v1_message_proto_depIdxs = []int32{
-	5, // 0: message.v1.Message.cmd:type_name -> common.v1.CommandType
-	6, // 1: message.v1.Message.serialize_type:type_name -> common.v1.SerializeType
-	6, // 2: message.v1.PushMessage.serialize_type:type_name -> common.v1.SerializeType
-	2, // 3: message.v1.PushRequest.msg:type_name -> message.v1.PushMessage
-	3, // 4: message.v1.PushService.Push:input_type -> message.v1.PushRequest
-	4, // 5: message.v1.PushService.Push:output_type -> message.v1.PushResponse
-	5, // [5:6] is the sub-list for method output_type
-	4, // [4:5] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	8, // 0: message.v1.Message.cmd:type_name -> common.v1.CommandType
+	9, // 1: message.v1.Message.serialize_type:type_name -> common.v1.SerializeType
+	9, // 2: message.v1.PushMessage.serialize_type:type_name -> common.v1.SerializeType
+	3, // 3: message.v1.PushRequest.message:type_name -> message.v1.PushMessage
+	0, // 4: message.v1.PushResponse.status:type_name -> message.v1.PushStatus
+	3, // 5: message.v1.BatchPushRequest.messages:type_name -> message.v1.PushMessage
+	4, // 6: message.v1.PushService.Push:input_type -> message.v1.PushRequest
+	6, // 7: message.v1.PushService.BatchPush:input_type -> message.v1.BatchPushRequest
+	5, // 8: message.v1.PushService.Push:output_type -> message.v1.PushResponse
+	7, // 9: message.v1.PushService.BatchPush:output_type -> message.v1.BatchPushResponse
+	8, // [8:10] is the sub-list for method output_type
+	6, // [6:8] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_message_v1_message_proto_init() }
@@ -441,13 +647,14 @@ func file_message_v1_message_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_message_v1_message_proto_rawDesc), len(file_message_v1_message_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   5,
+			NumEnums:      1,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_message_v1_message_proto_goTypes,
 		DependencyIndexes: file_message_v1_message_proto_depIdxs,
+		EnumInfos:         file_message_v1_message_proto_enumTypes,
 		MessageInfos:      file_message_v1_message_proto_msgTypes,
 	}.Build()
 	File_message_v1_message_proto = out.File

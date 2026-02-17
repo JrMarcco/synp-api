@@ -24,20 +24,15 @@ message Message {
   //  const messageId = ulid(Date.now())
   string message_id = 1;
 
-  // 目的地频道 ID ( 在网关用于获取目的地用户所在的 WebSocket )。
-  string destination_id = 2;
-  // 目的地频道类型 ( 单聊 / 群聊 )
-  string destination_type = 3;
-
   // 消息类型。
   // 这里不使用 MessageType type 作为字段名是因为 type 在 go 里面是关键字。
-  common.v1.CommandType cmd = 4;
+  common.v1.CommandType cmd = 2;
 
   // body 的序列化类型。
-  common.v1.SerializeType serialize_type = 5;
+  common.v1.SerializeType serialize_type = 3;
 
   // 消息体。
-  bytes body = 6;
+  bytes body = 4;
 }
 
 // AckPayload 是消息确认的载荷，包含消息的处理结果。
@@ -77,10 +72,39 @@ message PushMessage {
 // 前端消息 → 网关 → Kafka → 后端落库 → RPC调用网关 → 目标用户
 service PushService {
   rpc Push(PushRequest) returns (PushResponse);
+  rpc BatchPush(BatchPushRequest) returns (BatchPushResponse);
 }
 
 message PushRequest {
-  PushMessage msg = 1;
+  PushMessage message = 1;
+  bool need_retry = 2;
 }
 
-message PushResponse {}
+enum PushStatus {
+  PUSH_STATUS_UNSPECIFIED = 0;
+  PUSH_STATUS_SUCCESS = 1; // 成功
+  PUSH_STATUS_USER_OFFLINE = 2; // 用户离线
+  PUSH_STATUS_RATE_LIMITED = 3; // 限流
+  PUSH_STATUS_INVALID_MESSAGE = 4; // 消息格式错误
+  PUSH_STATUS_INTERNAL_ERROR = 5; // 内部错误
+}
+
+message PushResponse {
+  PushStatus status = 1;
+  string error_message = 2;
+}
+
+message BatchPushRequest {
+  repeated PushMessage messages = 1;
+  // 预留字段。
+  // 可选的回调地址 ( 用于结果通知 )。
+  string callback_url = 2;
+}
+
+// BatchPushResponse 批量推送响应。
+// 目前均为预留字段。
+message BatchPushResponse {
+  string task_id = 1;
+  int32 accepted_count = 2;
+  int32 rejected_count = 3;
+}

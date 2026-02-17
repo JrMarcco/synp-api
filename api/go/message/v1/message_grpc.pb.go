@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	PushService_Push_FullMethodName = "/message.v1.PushService/Push"
+	PushService_Push_FullMethodName      = "/message.v1.PushService/Push"
+	PushService_BatchPush_FullMethodName = "/message.v1.PushService/BatchPush"
 )
 
 // PushServiceClient is the client API for PushService service.
@@ -32,6 +33,7 @@ const (
 // 前端消息 → 网关 → Kafka → 后端落库 → RPC调用网关 → 目标用户
 type PushServiceClient interface {
 	Push(ctx context.Context, in *PushRequest, opts ...grpc.CallOption) (*PushResponse, error)
+	BatchPush(ctx context.Context, in *BatchPushRequest, opts ...grpc.CallOption) (*BatchPushResponse, error)
 }
 
 type pushServiceClient struct {
@@ -52,6 +54,16 @@ func (c *pushServiceClient) Push(ctx context.Context, in *PushRequest, opts ...g
 	return out, nil
 }
 
+func (c *pushServiceClient) BatchPush(ctx context.Context, in *BatchPushRequest, opts ...grpc.CallOption) (*BatchPushResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BatchPushResponse)
+	err := c.cc.Invoke(ctx, PushService_BatchPush_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PushServiceServer is the server API for PushService service.
 // All implementations should embed UnimplementedPushServiceServer
 // for forward compatibility.
@@ -62,6 +74,7 @@ func (c *pushServiceClient) Push(ctx context.Context, in *PushRequest, opts ...g
 // 前端消息 → 网关 → Kafka → 后端落库 → RPC调用网关 → 目标用户
 type PushServiceServer interface {
 	Push(context.Context, *PushRequest) (*PushResponse, error)
+	BatchPush(context.Context, *BatchPushRequest) (*BatchPushResponse, error)
 }
 
 // UnimplementedPushServiceServer should be embedded to have
@@ -73,6 +86,9 @@ type UnimplementedPushServiceServer struct{}
 
 func (UnimplementedPushServiceServer) Push(context.Context, *PushRequest) (*PushResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Push not implemented")
+}
+func (UnimplementedPushServiceServer) BatchPush(context.Context, *BatchPushRequest) (*BatchPushResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method BatchPush not implemented")
 }
 func (UnimplementedPushServiceServer) testEmbeddedByValue() {}
 
@@ -112,6 +128,24 @@ func _PushService_Push_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PushService_BatchPush_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BatchPushRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PushServiceServer).BatchPush(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PushService_BatchPush_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PushServiceServer).BatchPush(ctx, req.(*BatchPushRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PushService_ServiceDesc is the grpc.ServiceDesc for PushService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -122,6 +156,10 @@ var PushService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Push",
 			Handler:    _PushService_Push_Handler,
+		},
+		{
+			MethodName: "BatchPush",
+			Handler:    _PushService_BatchPush_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
